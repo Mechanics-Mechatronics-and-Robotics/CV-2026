@@ -1,0 +1,6 @@
+\babel@toc {english}{}
+\beamer@sectionintoc {1}{Outcomes}{3}{0}{1}
+\beamer@sectionintoc {2}{Challenges in FR}{4}{0}{2}
+\beamer@sectionintoc {3}{{Traditional FR Methods}}{13}{0}{3}
+\beamer@sectionintoc {4}{Deep Learning for FR}{14}{0}{4}
+\beamer@sectionintoc {5}{Conclusion \& Discussion}{17}{0}{5}

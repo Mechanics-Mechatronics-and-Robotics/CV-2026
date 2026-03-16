@@ -1,0 +1,36 @@
+\frametitle{Evaluation Metrics}
+\scriptsize
+Metrics vary based on the task: verification (1:1) or identification (1:N).
+\begin{minipage}[t]{0.3\textwidth} % Left column for the figure
+    \vspace{50pt} % Align to the top
+    \begin{figure}[h]
+        \includegraphics[width=\textwidth]{../figures/ROC.png}
+        \caption{\href{https://vis-www.cs.umass.edu/lfw/}{ROC curve \citep{huang2008labeled}.}}
+    \end{figure}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.65\textwidth} % Right column for the content
+    \vspace{0pt} % Align to the top
+    \begin{block}{\href{https://vis-www.cs.umass.edu/lfw/}{Performance Assessment}}
+
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Verification:}
+        \begin{itemize}
+            \item \textit{False Acceptance Rate (FAR):} Incorrectly accepting impostors.
+            \item \textit{False Rejection Rate (FRR):} Incorrectly rejecting genuine users.
+            \item \textit{Equal Error Rate (EER):} FAR = FRR.
+        \end{itemize}
+        \item \textbf{Identification:}
+        \begin{itemize}
+            \item Rank-1 accuracy: Top-1 match rate.
+            \item Cumulative Match Curve (CMC).
+        \end{itemize}
+        \item \textbf{Benchmarks:}
+        \begin{itemize}
+            \item LFW (Labeled Faces in the Wild): 99.8\% accuracy for ArcFace.
+            \item MegaFace: Tests scalability (1M distractors).
+        \end{itemize}
+    \end{itemize}
+    \textbf{Key Insight:} Trade-off between FAR and FRR defines security vs. usability.
+\end{minipage}

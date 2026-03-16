@@ -1,11 +1,16 @@
 \documentclass[pdfpagelabels=false, usepdftitle=false, aspectratio=169]{beamer}
-\usetheme[navigation, sectiontitles]{UM}
+\IfFileExists{beamerthemeUM.sty}{%
+    \usetheme[navigation, sectiontitles]{UM}
+}{%
+    \usetheme{Madrid}
+}
 
 \usepackage{graphicx, lipsum}
 \usepackage{xcolor} 
 \usepackage[english]{babel}
 \usepackage{natbib}
 \usepackage{hyperref}
+\graphicspath{{../}}
 
 \hypersetup{
     colorlinks=true,
@@ -23,23 +28,33 @@
 % title page information
 % ----------------------
 
-\title[CV-2025]{Computer Vision - 2025}
-\subtitle{Lecture \#07. Face Recognition}
+\title[CV-2025]{Computer Vision - 2026}
+\subtitle{Week \#09. Face Recognition}
 
 \author[A.Kornaev, K.Yakovlev]{
-  Lectures by Alexei Kornaev \inst{1,2,3,4} \\
-  Practical sessions by Kirill Yakovlev \inst{2}
+    Lectures by Alexei Kornaev \inst{1,2} \\
+    Practical sessions by Kirill Yakovlev \inst{1,3}
 }
 
 \institute[UM]{
-  \inst{1} AI Institute, Innopolis University (IU), Innopolis\\
-  \inst{2} Robotics \& CV Master's Program, IU, Innopolis \\
-  \inst{3} RC for AI, National RC for Oncology, Moscow \\ % n.a. NN.Blokhin
-  % \inst{3} Dept. of Mechatronics, Mechanics, and Robotics, Orel State University
-  \inst{4} Dept. of \(M^2R\), OSU, Orel
+    \inst{1} The Center for Top-Level Educational Programs \\
+    in AI, Innopolis University (IU), Innopolis \\
+    \inst{2} RC for AI, National RC for Oncology \\
+    n.a. N.N.Blokhin, Moscow \\
+    \inst{3} Ak Bars Bank, Kazan
 }
 
 \date{\today}
+
+\makeatletter
+\@ifundefined{UMtitleframe}{%
+    \newcommand{\UMtitleframe}{%
+        \begin{frame}
+            \titlepage
+        \end{frame}
+    }
+}{}
+\makeatother
 
 % ---------------------
 % begin of presentation
@@ -90,28 +105,6 @@
 % \end{figure}
 \end{frame}
 
-% % ----Frame------------
-% \begin{frame}{Challenges: Pose Variation}
-% \scriptsize
-% \begin{block}{Problem}
-%     Face recognition performance drops when the face is not in a frontal position. Variations in yaw, pitch, and roll angles affect feature extraction.
-% \end{block}
-% \begin{itemize}
-%     \item Profile faces have fewer distinctive features visible.
-%     \item Extreme angles can distort facial landmarks.
-%     \item Solutions:
-%     \begin{itemize}
-%         \item Pose normalization using deep learning.
-%         \item Multi-view training data.
-%     \end{itemize}
-% \end{itemize}
-% % \begin{figure}
-% %     \centering
-% %     \includegraphics[width=0.5\textwidth]{figures/pose_variation.png}
-% %     \caption{Examples of pose variations in face recognition.}
-% % \end{figure}
-% \end{frame}
-
 % ----Frame------------
 \begin{frame}{Pose Variation}
 \scriptsize
@@ -153,7 +146,7 @@ Occlusion occurs when parts of a face are obscured by objects (e.g., masks, sung
 \begin{minipage}[t]{0.2\textwidth} % Left column for the figure
     \vspace{45pt} % Align to the top
     \begin{figure}[h]
-        \includegraphics[width=\textwidth]{figures/occlusion_examples.png}
+        \includegraphics[width=\textwidth]{../figures/occlusion_examples.png}
         \caption{\href{https://ietresearch.onlinelibrary.wiley.com/doi/pdf/10.1049/bme2.12029}{Examples of occluded face images from the MAFA dataset \citep{zeng2021survey}.}}
     \end{figure}
 \end{minipage}
@@ -206,7 +199,7 @@ Occlusion occurs when parts of a face are obscured by objects (e.g., masks, sung
 \end{itemize}
 \begin{figure}
     \centering
-    \includegraphics[width=0.23\textwidth]{figures/FR_under_occlusion.png}
+    \includegraphics[width=0.23\textwidth]{../figures/FR_under_occlusion.png}
     \caption{\href{https://ietresearch.onlinelibrary.wiley.com/doi/pdf/10.1049/bme2.12029}{FR under occlusion \citep{zeng2021survey}.}}
 \end{figure}
 \end{frame}
@@ -290,7 +283,7 @@ Occlusion occurs when parts of a face are obscured by objects (e.g., masks, sung
 \end{itemize}
 \begin{figure}
     \centering
-    \includegraphics[width=0.34\textwidth]{figures/adversarial_attack_example.jpg}
+    \includegraphics[width=0.34\textwidth]{../figures/adversarial_attack_example.jpg}
     \caption{{Adversarial noise attack.}}
 \end{figure}
 \end{frame}
@@ -335,7 +328,7 @@ Early approaches relied on dimensionality reduction and handcrafted features.
 \begin{minipage}[t]{0.25\textwidth} % Left column for the figure
     \vspace{50pt} % Align to the top
     \begin{figure}[h]
-        \includegraphics[width=\textwidth]{figures/eigenfaces.png}
+        \includegraphics[width=\textwidth]{../figures/eigenfaces.png}
         \caption{\href{https://doi.org/10.1145/114191.114242}{Eigenfaces \citep{turk1991eigenfaces}.}}
     \end{figure}
 \end{minipage}
@@ -373,7 +366,7 @@ Early approaches relied on dimensionality reduction and handcrafted features.
 \begin{minipage}[t]{0.2\textwidth} % Left column for the figure
     \vspace{50pt} % Align to the top
     \begin{figure}[h]
-        \includegraphics[width=\textwidth]{figures/facenet_intuition.png}
+        \includegraphics[width=\textwidth]{../figures/facenet_intuition.png}
         \caption{\href{https://arxiv.org/abs/1503.03832}{FaceNet embeddings \citep{schroff2015facenet, deng2019arcface}.}}
     \end{figure}
 \end{minipage}
@@ -435,7 +428,7 @@ Metrics vary based on the task: verification (1:1) or identification (1:N).
 \begin{minipage}[t]{0.3\textwidth} % Left column for the figure
     \vspace{50pt} % Align to the top
     \begin{figure}[h]
-        \includegraphics[width=\textwidth]{figures/ROC.png}
+        \includegraphics[width=\textwidth]{../figures/ROC.png}
         \caption{\href{https://vis-www.cs.umass.edu/lfw/}{ROC curve \citep{huang2008labeled}.}}
     \end{figure}
 \end{minipage}
@@ -466,17 +459,6 @@ Metrics vary based on the task: verification (1:1) or identification (1:N).
     \textbf{Key Insight:} Trade-off between FAR and FRR defines security vs. usability.
 \end{minipage}
 \end{frame}
-
-
-% % ----Frame------------
-% \begin{frame}[fragile]{Paper reading}
-% \scriptsize
-% \begin{block}{\href{https://arxiv.org/abs/2004.02980}{LUVLi Face Alignment: Estimating Landmarks' Location, Uncertainty, and Visibility Likelihood}} %
-% \tiny
-%     Modern face alignment methods have become quite accurate at predicting the locations of facial landmarks, but they do not typically estimate the uncertainty of their predicted locations nor predict whether landmarks are visible. In this paper, we present a novel framework for jointly predicting landmark locations, associated uncertainties of these predicted locations, and landmark visibilities. We model these as mixed random variables and estimate them using a deep network trained with our proposed Location, Uncertainty, and Visibility Likelihood (LUVLi) loss. In addition, we release an entirely new labeling of a large face alignment dataset with over 19,000 face images in a full range of head poses. Each face is manually labeled with the ground-truth locations of 68 landmarks, with the additional information of whether each landmark is unoccluded, self-occluded (due to extreme head poses), or externally occluded. Not only does our joint estimation yield accurate estimates of the uncertainty of predicted landmark locations, but it also yields state-of-the-art estimates for the landmark locations themselves on multiple standard face alignment datasets. Our method's estimates of the uncertainty of predicted landmark locations could be used to automatically identify input images on which face alignment fails, which can be critical for downstream tasks \citet{kumar2020luvli}.
-% \end{block}
-
-% \end{frame}
 
 
 % ----Frame------------
@@ -551,10 +533,8 @@ Metrics vary based on the task: verification (1:1) or identification (1:N).
 \tiny 
 \bibliographystyle{plainnat}
 % \bibliographystyle{plain}
-\bibliography{ref}
+\bibliography{../references}
 \end{frame}
 
 \end{document}
-
-
 
