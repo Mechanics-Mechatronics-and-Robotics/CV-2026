@@ -1,33 +1,301 @@
-\documentclass[11pt]{article}
+% ============================
+% CV-2026 Updated Memo (Alexei Kornaev, Kirill Yakovlev)
+% ============================
+\documentclass[a4paper,11pt]{texMemo}
+\usepackage{graphicx, lipsum}
+\usepackage{hyperref}
+\usepackage{xcolor}
 
-\input{../style.sty}
-\addbibresource{../references.bib}
+\usepackage[english]{babel}
+\usepackage[square,numbers]{natbib}
+\bibliographystyle{abbrvnat}
 
-\def\lecturetitle{CV-2026 Syllabus}
-\def\lecturesubtitle{Computer Vision Course Outline}
-\def\lectureweek{S}
-\def\lecturedate{Spring 2026}
+\memoto{M25-RO-01 (master students)}
+\memofrom{Alexei Kornaev, Kirill Yakovlev}
+\memosubject{Course on Computer Vision (CV-2026, Semester 2)}
+\memodate{\today}
+\logo{\includegraphics[width=0.3\textwidth]{logo.png}}
 
 \begin{document}
+\maketitle
 
-\lectureheading
+% ============================
+\section{Lectures}
+% ============================
+\begin{enumerate}
 
-\sectiontitle{Course Description}
-Add the course description, goals, and expected background here.
-
-\sectiontitle{Learning Outcomes}
+% ------------------------------------------------------------
+\item \textbf{Intro to Computer Vision}
+\citep{HuggingFaceCVcourse,szeliski2022computer, merkulov2022optimSeminars, prince2023understanding,CVcourseCSCI1430,gitCV-2026, LightningColab}, 
+emphasis on \href{https://huggingface.co/learn/computer-vision-course/en/unit1/chapter1/motivation}{Unit 1} \citep{HuggingFaceCVcourse} 
 \begin{itemize}
-  \item Explain core ideas in modern computer vision.
-  \item Connect lecture concepts with hands-on notebook exercises.
-  \item Read, discuss, and reproduce selected vision papers.
+    \item \textbf{Theory:}
+    What CV solves today: recognition, localization, segmentation, tracking, 3D understanding, and multimodal reasoning.
+    The modern stack: \emph{data \textrightarrow\ augmentation \textrightarrow\ backbone \textrightarrow\ head \textrightarrow\ evaluation \textrightarrow\ deployment}.
+    Image formation + photometric distortions (exposure, blur, noise), and why ``dataset shift'' is the default.
+    Deterministic CV (filtering/edges/geometry) as baselines and as debugging tools for DL.
+    Metrics and pitfalls: accuracy vs F1 vs mAP, calibration, robustness, and reproducibility.
+    Preview of the semester arc: \emph{CNNs/ViTs} $\rightarrow$ \emph{promptable/open-vocabulary CV} $\rightarrow$ \emph{VLMs} $\rightarrow$ \emph{VLAs/VLAMs}.
+    \item \textbf{Skills :}
+    OpenCV as a fast baseline and debugging tool (preprocessing, geometry, tracking primitives).
+    PyTorch + Lightning (clean training loops) + ClearML (experiment tracking).
+    A first ``CV systems'' lab mindset: set a baseline, log metrics, visualize failure modes, write a short experiment report.
 \end{itemize}
 
-\sectiontitle{Assessment}
-Add grading policy, deadlines, and attendance expectations here.
+% ------------------------------------------------------------
+\item \textbf{Convolutional Neural Networks}
+\citep{prince2023understanding, HuggingFaceCVcourse, YandexHandbookML,Goodfellow-et-al-2016,howard2020deep, kiranyaz20211d, li2021survey}, emphasis on \href{https://udlbook.github.io/udlbook/}{UDL} book, \href{https://education.yandex.ru/handbook/ml/article/svyortochnye-nejroseti}{Yandex handbook} \cite{prince2023understanding,YandexHandbookML} and \href{https://github.com/fastai/fastbook/blob/master/13_convolutions.ipynb}{hands-on coding chapter 13} \cite{howard2020deep} 
+\begin{itemize}
+    \item \textbf{Theory :}
+    Convolutions as \emph{inductive bias} (locality + translation equivariance), and where CNNs still win (efficiency, small data, edge devices).
+    Modern training recipes: normalization (BN/LN), augmentation, regularization, LR schedules, mixed precision.
+    Architecture patterns: residual connections, bottlenecks, depthwise separable convs, inverted residuals.
+    Minimal but relevant zoo: AlexNet/VGG (history), ResNet (baseline), EfficientNet/MobileNet (efficiency), ConvNeXt (modernization of CNNs).
+    When to choose CNN vs ViT, and hybrid backbones.
+    \item \textbf{Skills :}
+    Implement + debug CNN training (CIFAR-10 or a small robotics-themed dataset).
+    Transfer learning and fine-tuning (ResNet/ConvNeXt) with proper layer freezing/unfreezing.
+    Build a small ``edge-ready'' model (MobileNet-style) and measure speed/accuracy trade-offs.
+\end{itemize}
 
-\sectiontitle{Schedule}
-List the weekly topics and corresponding labs here.
+% ------------------------------------------------------------
+\item \textbf{Visual transformers}
+\citep{prince2023understanding, vaswani2023attentionneed, dosovitskiy2021imageworth16x16words}, emphasis on \href{https://arxiv.org/abs/2010.11929}{paper on ViTs} \citep{dosovitskiy2021imageworth16x16words}, and \href{https://udlbook.github.io/udlbook/}{UDL} book \citep{prince2023understanding}
+\begin{itemize}
+    \item \textbf{Theory:}
+    Transformer essentials for vision: patching, tokenization, positional encoding, self-attention, MLP blocks.
+    Why ViTs scale well and why they may be fragile without good recipes/data.
+    ``Transformer family'' overview (no overload): ViT (baseline), hierarchical attention idea (e.g., Swin-style), and why many detectors/segmenters are now transformer-based.
+    Attention maps as an interpretability/debugging instrument (with caveats).
+    \item \textbf{Skills:}
+    Fine-tune a ViT from Hugging Face on a moderate dataset; compare to a CNN baseline.
+    Measure compute/memory, and do a short ablation: resolution, augmentation, freezing strategy.
+\end{itemize}
 
-\printbibliography
+% ------------------------------------------------------------
+\item \textbf{Generative Models}
+\citep{YandexHandbookML,prince2023understanding, ho2020denoisingdiffusionprobabilisticmodels, diffusionpolicy2023}, emphasis on \href{https://education.yandex.ru/handbook/ml/article/vvedenie-v-generativnoe-modelirovanie}{Yandex handbook} \citep{YandexHandbookML}, \href{https://udlbook.github.io/udlbook/}{UDL} book \citep{prince2023understanding}, and \href{https://www.youtube.com/watch?v=qJeaCHQ1k2w}{Deepai} video tutorials on GMs
+\begin{itemize}
+    \item \textbf{Theory:}
+    Generative modeling goals: synthesis, compression, uncertainty, and \emph{planning via sampling}.
+    VAEs: latent space as controllable representation (and typical failure modes).
+     Generative modeling goals: synthesis, compression, uncertainty, and planning via sampling. VAEs: latent space as controllable representation (and typical failure modes). Diffusion models: denoising, conditioning, guidance; why they dominate image generation. Flow matching. Bridge to robotics: generative models for actions/trajectories (policy as a generative model). Foundation generative models overview: ChatGPT, Qwen, DALL·E, Midjourney, etc.
+    \item \textbf{Skills:}
+    Implement a VAE for reconstruction + latent interpolation.
+    Generate diverse action candidates and re-rank them by a simple cost function.
+    The use of known generative models in their inference mode, feel the joy of contemplation. 
+\end{itemize}
 
+\item \textbf{Vision-Language Models}
+\citep{radford2021learningtransferablevisualmodels, Alayrac2022, blip2_2023, llava_2023, qwen_vl_2023, internvl_2024, zhang2024visionlanguagemodelsvisiontasks, hu2021loralowrankadaptationlarge, prince2023understanding}, epmhasis on basics of  \href{https://education.yandex.ru/handbook/ml/article/obuchenie-predstavlenij}{representation learning} \citep{YandexHandbookML} and \href{https://arxiv.org/abs/2103.00020}{CLIP} paper \citep{radford2021learningtransferablevisualmodels}
+\begin{itemize}
+    \item \textbf{Theory:}
+    Why VLMs changed CV: open-vocabulary recognition, retrieval, grounding, and prompting as an API.
+    Two dominant families:
+    (1) \textbf{contrastive} alignment (CLIP-like) for retrieval/zero-shot,
+    (2) \textbf{generative} multimodal LLMs (LLaVA/BLIP-2/Qwen-VL/InternVL-style) for reasoning and instruction following.
+    Data and objectives: contrastive, captioning, instruction tuning, grounding.
+    Practical adaptation: PEFT/LoRA, prompt engineering, and evaluation traps (leakage, overclaiming).
+    \item \textbf{Skills:}
+    Zero-shot + few-shot classification and retrieval with CLIP-like models.
+    Fine-tune a VLM head with LoRA on a small domain dataset; write a compact evaluation report.
+\end{itemize}
+
+% ------------------------------------------------------------
+\item \textbf{Segmentation and Object Detection}
+\citep{prince2023understanding, ronneberger2015unet, 
+ren2015faster, redmon2016yolo, carion2020detr, 
+lin2017focal, rezatofighi2019giou,
+he2017mask, kirillov2023segment, sam2_2024, groundingdino2023}, emphasis on \href{https://udlbook.github.io/udlbook/}{UDL} book \citep{prince2023understanding}, and original papers on \href{https://arxiv.org/abs/1505.04597}{U-net} \citep{ronneberger2015unet}, \href{https://arxiv.org/abs/1506.02640}{YOLO} \citep{redmon2016yolo}, \href{https://arxiv.org/abs/2304.02643}{SAM} \citep{kirillov2023segment}
+\begin{itemize}
+
+    \item \textbf{Theory:}
+    Segmentation taxonomy (semantic: U-Net, DeepLab; instance: Mask R-CNN; panoptic). 
+    Object detection taxonomy (two-stage: Faster R-CNN; one-stage: YOLO; transformer-based: DETR). 
+    Architectural components: anchor-based vs anchor-free, Feature Pyramid Networks (FPN), NMS vs end-to-end set prediction (Hungarian matching). 
+    Losses and metrics: IoU/GIoU/DIoU, focal loss, mAP@0.5 and mAP@[0.5:0.95], IoU/Dice for segmentation. 
+    Promptable and open-vocabulary perception: SAM → SAM 2, language-grounded detection (GroundingDINO-style). 
+    Model selection logic for robotics and real-time systems.
+
+    \item \textbf{Skills:}
+    Train and evaluate a YOLO detector on a custom dataset. 
+    Fine-tune a segmentation model (U-Net or DeepLab) and compute IoU/Dice. 
+    Compare YOLO, Faster R-CNN, and DETR in terms of speed and mAP. Run SAM (or SAM2) for automatic and prompt-based segmentation and evaluate mask quality. Build a pipeline combining detection and SAM refinement. Perform structured error analysis (small objects, occlusion, domain shift, imbalance).
+\end{itemize}
+
+% ------------------------------------------------------------
+\item \textbf{Maps of Depth, Landmarks Detection}
+\citep{YandexHandbookML, prince2023understanding, ming2021deep, kumar2020luvli}, emphasis on \href{https://huggingface.co/learn/computer-vision-course/en/unit8/3d_measurements_stereo_vision}{stereo vision} intuition \citep{HuggingFaceCVcourse}, \href{https://arxiv.org/abs/2406.09414}{Depth Anything} \citep{yang2024depthv2} and landmark detection \href{https://arxiv.org/abs/2004.02980}{LUVLi} \citep{kumar2020luvli} original papers, and \href{https://udlbook.github.io/udlbook/}{pose estimation} basics \citep{prince2023understanding}
+\begin{itemize}
+    \item \textbf{Theory:}
+    Depth: stereo vs monocular; where each breaks; evaluation pitfalls (scale ambiguity).
+    Keypoints/pose: heatmaps vs regression, uncertainty and occlusion handling.
+    Practical robotics angle: 2D keypoints $\rightarrow$ 3D pose; calibration; tracking stability.
+    \item \textbf{Skills:}
+    Build a depth map (stereo or pretrained monocular) and validate on a small benchmark.
+    Run pose/landmarks with a pretrained model (MediaPipe/dlib or modern equivalents), then stabilize temporally (simple filtering).
+\end{itemize}
+
+% ------------------------------------------------------------
+\item \textcolor{gray}{\textbf{Midterm Exam}}
+
+% ------------------------------------------------------------
+\item \textbf{Face Recognition}
+\citep{zeng2021survey, liu2023patch, turk1991eigenfaces, koch2015siamese, schroff2015facenet, deng2019arcface, wang2021deep, prince2023understanding}
+\begin{itemize}
+    \item \textbf{Theory:}
+    Metric learning pipeline: embeddings, margins, sampling, and evaluation (verification vs identification).
+    Robustness: pose, occlusion, aging, domain shift.
+    Security/ethics: bias, privacy, deepfakes, and responsible deployment (what you can measure, what you cannot claim).
+    \item \textbf{Skills:}
+    Fine-tune a face embedding model (or use pretrained) and evaluate verification ROC / FAR-FRR trade-offs.
+    Real-time detection+tracking+recognition pipeline (with clear limitations documented).
+\end{itemize}
+
+
+% ------------------------------------------------------------
+\item \textbf{Plus 1D: Video and 3D Image Processing}
+\citep{maturana2015voxnet, Wang_2017, mao2021voxeltransformer3dobject, prince2023understanding, singh20203d}
+\begin{itemize}
+    \item \textbf{Theory:}
+    Video: temporal modeling (3D CNNs, video transformers), tracking, and action recognition.
+    ``Foundation'' trend: tracking/segmentation across frames (prompting and memory, conceptually).
+    3D: reconstruction basics (SfM/MVS) + modern view: neural rendering/3D representations as compressed scene models.
+    \item \textbf{Skills:}
+    Fine-tune a video model on a small action dataset or do self-supervised features + linear probe.
+    Implement multi-object tracking (SORT/DeepSORT style) and evaluate on a short sequence.
+    Build a small 3D reconstruction demo (Open3D) and document failure cases.
+\end{itemize}
+
+% ------------------------------------------------------------
+\item \textbf{Cloud of Points Processing}
+\citep{YandexHandbookML, qi2017pointnetdeeplearningpoint, lai2022stratified}
+\begin{itemize}
+    \item \textbf{Theory:}
+    Representations: points vs voxels vs implicit fields; why point transformers work.
+    Core models: PointNet family + graph/DGCNN intuition + transformer-style point processing.
+    Robotics angle: LiDAR perception, registration, segmentation of drivable space/objects.
+    \item \textbf{Skills:}
+    Run PointNet/PointNet++ baseline; then compare with a transformer-like point model (if compute allows).
+    Segment a small LiDAR scene or do object classification; report metrics + qualitative visualizations.
+\end{itemize}
+
+% ------------------------------------------------------------
+
+
+% ------------------------------------------------------------
+\item \textbf{Vision-Language-Action Models: Part \#1}
+\citep{rt1_2022, rt2_2023, openx_2023, openvla_2024, octo_2024, diffusionpolicy2023}
+\begin{itemize}
+    \item \textbf{Theory:}
+    What makes a VLA/VLAM different from a VLM: actions as a modality, closed-loop control, and safety constraints.
+    Core design choices:
+    (a) \textbf{action representation} (continuous vs discretized/action tokens),
+    (b) \textbf{policy learning} (behavior cloning, offline RL, diffusion policies),
+    (c) \textbf{conditioning} (language goals, goal images, histories/memory).
+    Canonical lines:
+    RT-1 (robot transformer scaling),
+    RT-2 (web knowledge transfer to actions),
+    Open X-Embodiment / RT-X (multi-robot data standardization),
+    OpenVLA and Octo as open(-ish) generalist policies.
+    Compute-realism constraints: why we often do ``small VLA'' in sim + evaluate carefully.
+    \item \textbf{Skills (expanded):}
+    Build a ``VLM-to-action prerequisite'' pipeline:
+    CLIP retrieval + grounded segmentation (CLIPSeg/SAM-style) $\rightarrow$ object-centric state.
+    Implement imitation learning baseline in simulation (or a toy manipulator) conditioned on language.
+\end{itemize}
+
+% ------------------------------------------------------------
+\item \textbf{Vision-Language-Action Models: Part \#2}
+\citep{saycan_2022, palme_2023, gemini_robotics_2025}
+\begin{itemize}
+    \item \textbf{Theory:}
+    System architectures for embodied agents:
+    \textbf{end-to-end} VLA vs \textbf{modular} (perception $\rightarrow$ planner $\rightarrow$ skills).
+    Planning + grounding: SayCan-style ``LLM proposes, skills constrain''; embodied reasoning models (PaLM-E-style).
+    Safety and deployment: constraint layers, uncertainty, guardrails, and the need for measurable safety claims.
+    Real-world constraints: latency, on-device inference, calibration, logging, data flywheel (collect $\rightarrow$ fine-tune $\rightarrow$ evaluate).
+    The ``next trend'' to watch: robotics foundation models and agentic tool use in physical tasks.
+    \item \textbf{Skills (expanded):}
+    Mini-VLAM capstone:
+    language instruction $\rightarrow$ grounded perception $\rightarrow$ symbolic plan (skills) $\rightarrow$ execution in sim/ROS2.
+    Evaluate with a task suite: success rate + failure taxonomy + short demo video.
+\end{itemize}
+
+% ------------------------------------------------------------
+\item \textbf{A lecture of the student's choice}
+\begin{itemize}
+    \item \textbf{Approaching Artificial General Intelligence (AGI)} \citep{deepseekai2025deepseekr1incentivizingreasoningcapability}
+    \item \textbf{Dynamic Visual Reasoning by Learning Differentiable Physics} \citep{}
+    \item \textbf{Info-structure and Deploy} \citep{}
+    \item \textbf{Mixing and Tuning of the Models} \citep{}
+    \item \textbf{Transformer from scratch step-by-step} \citep{}
+\end{itemize}
+
+\end{enumerate}
+
+% ============================
+\section{Practical sessions}
+% ============================
+\begin{enumerate}
+    \item \textbf{Feature Extraction and Machine Learning} \citep{gitCV-2026, LightningColab}
+    \item \textbf{Convolutional Neural Networks} \citep{gitCV-2026}
+    \item \textbf{Visual Transformers}  \citep{gitCV-2026}
+    \item \textcolor{black}{Generative Models \citep{gitCV-2026}}%{\textbf{Assignment \# 01}}
+    \item \textbf{Vision-Language Models and Zero (and/or Few) - Shot Classification} \cite{gitCV-2026}
+    \item \textbf{Segmentation and/or Object Detection} \citep{gitCV-2026}
+    \item \textbf{Maps of Depth and/or Pose Estimation} \citep{gitCV-2026}
+    \item \textcolor{gray}{\textbf{Midterm Exam}}
+    \item \textbf{Face recognition and Object Tracking} \citep{gitCV-2026}
+    \item \textbf{3D Data Reconstruction and/or Video Processing} \citep{gitCV-2026}
+    \item \textbf{Cloud of Points Processing} \cite{gitCV-2026, YandexHandbookML}
+    \item \textbf{Vision-Language-Action Models: Part \#1} \citep{gitCV-2026}
+    \item \textbf{Vision-Language-Action Models: Part \#2} \citep{gitCV-2026}
+    \item \textbf{Deploy of a CV model} \citep{gitCV-2026}
+    \item \textcolor{gray}{\textbf{Defend of the students' projects}}
+\end{enumerate}
+
+% ============================
+\section{Group Project Track (assignment \#1), week 02}
+% ============================
+The course project must involve \textbf{visual data (pixels)} or \textbf{multimodal data} (vision+text+sensor).
+Projects are encouraged to align with \textbf{Robotics and Computer Vision} and emphasize strong evaluation and reproducibility.
+
+\subsection*{Suggested project topics (choose one)}
+\textbf{VLM-focused (perception + prompting):}
+\begin{enumerate}
+\item \textbf{Open-vocabulary detector for lab objects:} Grounded detection + promptable segmentation; evaluate on novel categories and lighting changes.
+\item \textbf{CLIP-based anomaly detection:} learn ``normal'' with self-supervision, use text prompts to explain anomalies; evaluate on a small industrial/robotics dataset.
+\item \textbf{Domain adaptation with LoRA:} adapt a VLM to a niche domain (medical/robotics parts) with 200--1000 labeled pairs; compare PEFT vs full fine-tuning.
+\item \textbf{Video understanding with VLMs:} retrieve key moments from robot videos via text queries; measure retrieval quality and latency.
+\item \textbf{Referring segmentation benchmark:} build a mini-dataset of referring expressions in your lab; evaluate grounded detection + segmentation baselines.
+
+\end{enumerate}
+
+\textbf{VLA/VLAM-focused (capstone, recommended):}
+\begin{enumerate}
+\setcounter{enumi}{5}
+\item \textbf{Mini-VLAM in simulation:} language instruction $\rightarrow$ grounded perception $\rightarrow$ skill execution; report success rate and failure taxonomy.
+\item \textbf{Diffusion policy for manipulation:} implement a diffusion-based action generator in sim; compare vs behavior cloning.
+\item \textbf{SayCan-style planner:} LLM proposes a sequence of skills, skills constrain feasibility; evaluate on a kitchen/tabletop task set.
+\item \textbf{Open X-Embodiment style data format:} unify 2--3 small robot dataset
+\end{enumerate}
+
+% ============================
+\section{Competition Track (assignment \#2, week 09)}
+% ============================
+\textbf{A Computer Vision Competition with Kaggle Private Dataset}
+\begin{itemize}
+    \item \textbf{Challenge (as an example):} ``Open-vocabulary perception for robotics scenes'' (recognize + localize novel objects from text prompts).
+    \item \textbf{Task:} open-vocabulary detection/segmentation + a simple downstream metric (e.g., pick-list correctness).
+    \item \textbf{Dataset:} private lab/robot camera images + hidden test split; prompts provided for evaluation.
+    \item \textbf{Skills:} baselines (CNN/ViT), strong models (grounded detection + SAM-style segmentation), experiment tracking, report writing.
+\end{itemize}
+
+\section{Midterm}
+60 min test. 
+\section{Final Exam}
+60 min test.
+
+\bibliography{references}
 \end{document}
